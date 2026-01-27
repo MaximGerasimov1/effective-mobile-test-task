@@ -1,0 +1,25 @@
+version: "3.8"
+services:
+  backend:
+    build: ./backend
+    image: effective_mobile_backend:v1.0
+    container_name: ${BACKEND_CONTAINER_NAME}
+    environment:
+      - APP_PORT=${BACKEND_INTERNAL_PORT}
+    networks:
+      - app-network
+
+  nginx:
+    build: ./nginx
+    image: effective_mobile_nginx:v1.0
+    container_name: ${NGINX_CONTAINER_NAME}
+    ports:
+      - "${NGINX_EXTERNAL_PORT}:80"
+    depends_on:
+      - backend
+    networks:
+      -  app-network
+
+networks:
+  app-network:
+    driver: bridge
